@@ -435,6 +435,458 @@
 	  }, 'image/png');
 	});
 
+	<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Kan Bağışı Görsel Oluşturucu</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet" />
+<style>
+  body {
+	font-family: 'Poppins', sans-serif;
+    background: #f9f9f9;
+    margin: 0; padding: 20px;
+    color: #222;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  h1 {
+    color: #d32f2f;
+    margin-bottom: 20px;
+  }
+  form {
+    max-width: 480px;
+    width: 100%;
+    background: white;
+    padding: 25px 30px;
+    border-radius: 12px;
+    box-shadow: 0 0 12px rgba(0,0,0,0.1);
+    margin-bottom: 25px;
+  }
+  label {
+    display: block;
+    margin-top: 18px;
+    font-weight: 500;
+  }
+  input[type="text"],
+  input[type="date"],
+  select {
+    width: 100%;
+    padding: 10px 14px;
+    margin-top: 6px;
+    border: 1.8px solid #ccc;
+    border-radius: 8px;
+    font-size: 1rem;
+    box-sizing: border-box;
+    transition: border-color 0.3s ease;
+  }
+  input[type="text"]:focus,
+  select:focus,
+  input[type="date"]:focus {
+    outline: none;
+    border-color: #d32f2f;
+    box-shadow: 0 0 6px rgba(211,47,47,0.5);
+  }
+  .inline-group {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .inline-group input[type="text"] {
+    flex-grow: 1;
+  }
+  .btn-y {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    border: none;
+    background-color: #d32f2f;
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+    font-size: 18px;
+    line-height: 1;
+    user-select: none;
+    transition: background-color 0.3s ease;
+  }
+  .btn-y:hover {
+    background-color: #9b2222;
+  }
+  button[type="submit"], #indirBtn {
+    margin-top: 30px;
+    width: 100%;
+    background-color: #d32f2f;
+    color: white;
+    border: none;
+    padding: 14px;
+    font-size: 1.2rem;
+    font-weight: 600;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  button[type="submit"]:hover, #indirBtn:hover {
+    background-color: #9b2222;
+  }
+  #otherHospitalContainer {
+    margin-top: 12px;
+    display: none;
+  }
+  #canvasContainer {
+    margin-top: 20px;
+    background: #fff;
+    border: 1px solid #ccc;
+    box-shadow: 0 0 8px rgba(0,0,0,0.1);
+    max-width: 360px;
+    width: 100%;
+  }
+  canvas {
+    width: 100%;
+    height: auto;
+    display: block;
+  }
+</style>
+</head>
+<body>
+  <h1>Kan Bağışı Form Oluşturucu</h1>
+  <form id="kanForm" autocomplete="off">
+    <label for="hastaAdi">Hasta Adı Soyadı <span style="color:#d32f2f">*</span></label>
+    <input type="text" id="hastaAdi" name="hastaAdi" required placeholder="Örn: İlker Karacaoğlan" />
+
+    <label for="hastane">Bulunduğu Hastane <span style="color:#d32f2f">*</span></label>
+    <select id="hastane" name="hastane" required>
+      <option value="" disabled selected>Hastane Seçiniz</option>
+      <option>Erciyes Üniversitesi Tıp Fakültesi</option>
+      <option>Kayseri Şehir Hastanesi</option>
+      <option>Kayseri Devlet Hastanesi</option>
+      <option>Diğer</option>
+    </select>
+
+    <div id="otherHospitalContainer">
+      <label for="otherHospital">Lütfen Hastane İsmini Giriniz</label>
+      <input type="text" id="otherHospital" name="otherHospital" placeholder="Hastane ismi" />
+    </div>
+
+    <label for="bolum">Bulunduğu Bölüm (opsiyonel)</label>
+    <input type="text" id="bolum" name="bolum" placeholder="Örn: Kanka Hastanesi" />
+
+    <label for="kanGrubu">Kan Grubu <span style="color:#d32f2f">*</span></label>
+    <select id="kanGrubu" name="kanGrubu" required>
+      <option value="" disabled selected>Kan grubunu seçiniz</option>
+      <option>A Rh(+)</option>
+      <option>A Rh(-)</option>
+      <option>B Rh(+)</option>
+      <option>B Rh(-)</option>
+      <option>AB Rh(+)</option>
+      <option>AB Rh(-)</option>
+      <option>0 Rh(+)</option>
+      <option>0 Rh(-)</option>
+    </select>
+
+    <label for="kanTuru">Kan Türü <span style="color:#d32f2f">*</span></label>
+    <select id="kanTuru" name="kanTuru" required>
+      <option value="" disabled selected>Kan türünü seçiniz</option>
+      <option>Kırmızı Kan</option>
+      <option>Trombosit</option>
+      <option>Granülosit</option>
+    </select>
+
+    <label for="iletisimKisi">İletişim Kişisi <span style="color:#d32f2f">*</span></label>
+    <div class="inline-group">
+      <input type="text" id="iletisimKisi" name="iletisimKisi" required placeholder="İletişim Kişisi" />
+      <button type="button" class="btn-y" id="fillNameBtn" title="Yasin ÖRER olarak doldur">Y</button>
+    </div>
+
+    <label for="iletisimNumarasi">İletişim Numarası <span style="color:#d32f2f">*</span></label>
+    <div class="inline-group">
+      <input type="text" id="iletisimNumarasi" name="iletisimNumarasi" required placeholder="+90 5xx xxx xx xx" />
+      <button type="button" class="btn-y" id="fillPhoneBtn" title="+90 534 630 17 01 olarak doldur">Y</button>
+    </div>
+
+    <label for="tarih">Tarih <span style="color:#d32f2f">*</span></label>
+    <input type="date" id="tarih" name="tarih" required />
+
+    <button type="submit">Görsel Oluştur</button>
+  </form>
+
+  <div id="canvasContainer" style="display:none;">
+    <canvas id="outputCanvas" width="1080" height="1920"></canvas>
+    <button id="indirBtn">İndir</button>
+  </div>
+
+<script>
+  // Tarihi ayarla
+  const tarihInput = document.getElementById('tarih');
+  tarihInput.value = new Date().toISOString().split('T')[0];
+
+
+  // Diğer hastane seçimi
+  const hastaneSelect = document.getElementById('hastane');
+  const otherHospitalContainer = document.getElementById('otherHospitalContainer');
+  const otherHospitalInput = document.getElementById('otherHospital');
+  hastaneSelect.addEventListener('change', () => {
+    if(hastaneSelect.value === 'Diğer'){
+      otherHospitalContainer.style.display = 'block';
+      otherHospitalInput.required = true;
+    } else {
+      otherHospitalContainer.style.display = 'none';
+      otherHospitalInput.required = false;
+      otherHospitalInput.value = '';
+    }
+  });
+
+  // Y butonları
+  document.getElementById('fillNameBtn').addEventListener('click', () => {
+    document.getElementById('iletisimKisi').value = 'Yasin ÖRER';
+  });
+  document.getElementById('fillPhoneBtn').addEventListener('click', () => {
+    document.getElementById('iletisimNumarasi').value = '+90 534 630 17 01';
+  });
+
+  const form = document.getElementById('kanForm');
+  const canvasContainer = document.getElementById('canvasContainer');
+  const canvas = document.getElementById('outputCanvas');
+  const ctx = canvas.getContext('2d');
+  const indirBtn = document.getElementById('indirBtn');
+  
+  const bgImage = new Image();
+  bgImage.src = 'https://img.freepik.com/free-vector/abstract-background-vertical-color-white-shape_361591-4452.jpg';
+
+  // Logo resmi yükleme (Siyah zeminli beyaz logo)
+  const logo = new Image();
+  logo.src = 'https://kanserekarsi.org/wp-content/uploads/2024/01/L_Orj_Siyah_Kanka_Logo-1-e1705005654591.png'; // Benim placeholder linkim, kendi logonun linkini değiştirebilirsin
+
+  // Yazı ayarları için yardımcı fonksiyon
+  function drawTextMultiLine(ctx, text, x, y, maxWidth, lineHeight, font) {
+    ctx.font = font;
+    ctx.fillStyle = '#d32f2f';
+    const words = text.split(' ');
+    let line = '';
+    let testLine = '';
+    let lineArray = [];
+    for(let n=0; n<words.length; n++) {
+      testLine += words[n] + ' ';
+      let metrics = ctx.measureText(testLine);
+      if(metrics.width > maxWidth && n > 0){
+        lineArray.push(line);
+        line = words[n] + ' ';
+        testLine = words[n] + ' ';
+      } else {
+        line += words[n] + ' ';
+      }
+      if(n === words.length -1){
+        lineArray.push(line);
+      }
+    }
+    for(let i=0; i<lineArray.length; i++) {
+      ctx.fillText(lineArray[i], x, y + (i * lineHeight));
+    }
+  }
+
+	function drawVisual(data){
+	  // Temizle
+	  ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+	  // Beyaz arka plan
+	  ctx.fillStyle = 'white';
+	  ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+	  // Arka plan görselini %50 opaklıkla çiz (cover şekilde zoomlayarak)
+	  if (bgImage.complete) {
+		const scaleX = canvas.width / bgImage.width;
+		const scaleY = canvas.height / bgImage.height;
+		const scale = Math.max(scaleX, scaleY); // Zoom-cover efekti için
+
+		const imgWidth = bgImage.width * scale;
+		const imgHeight = bgImage.height * scale;
+
+		const x = (canvas.width - imgWidth) / 2;
+		const y = (canvas.height - imgHeight) / 2;
+
+		ctx.save();
+		ctx.globalAlpha = 0.3; // opaklık
+		ctx.drawImage(bgImage, x, y, imgWidth, imgHeight);
+		ctx.restore();
+	}
+
+    // Başlık
+    ctx.fillStyle = '#d32f2f';
+    ctx.font = 'bold 80px Poppins';
+    ctx.textAlign = 'center';
+    ctx.fillText('ACİL KAN İHTİYACI', canvas.width/2, 250);
+
+    // Hasta adı text
+	ctx.fillStyle = '#222';
+    ctx.font = 'normal 36px Poppins';
+    ctx.fillText('Hasta Adı:', canvas.width/2, 500);
+	
+	// Hasta adı
+    ctx.font = 'bold 48px Poppins';
+    ctx.fillText(data.hastaAdi, canvas.width/2, 550);
+
+    // Kan türü ve kan grubu text
+    ctx.font = 'bold 36px Poppins';
+    ctx.fillText('İhtiyaç Kan:' , canvas.width/2, 650);
+
+    // Kan türü ve kan grubu
+    ctx.font = 'bold 48px Poppins';
+    ctx.fillText(data.kanGrubu + ' ' + data.kanTuru , canvas.width/2, 700);
+
+    // Hastane Text
+    ctx.font = 'normal 36px Poppins';
+    ctx.fillText('Bulunduğu Hastane:', canvas.width/2, 800);
+	
+	// Hastane
+    ctx.font = 'bold 48px Poppins';
+    ctx.fillText(data.hastane, canvas.width/2, 850);
+
+    // Bölüm varsa
+    if(data.bolum){
+	  ctx.font = 'normal 42px Poppins';
+      ctx.fillText(data.bolum, canvas.width/2, 900);
+	  
+	// İletişim Kişisi text
+    ctx.font = 'normal 36px Poppins';
+    ctx.fillText('İletişim: ', canvas.width/2, 1000);
+
+    // İletişim Kişisi
+    ctx.font = 'bold 48px Poppins';
+    ctx.fillText(data.iletisimKisi, canvas.width/2, 1050);
+	
+	// İletişim Telefon text
+    ctx.font = 'normal 36px Poppins';
+    ctx.fillText('Telefon: ', canvas.width/2, 1150);
+	
+		// İletişim Telefon
+    ctx.font = 'bold 48px Poppins';
+    ctx.fillText(data.iletisimNumarasi, canvas.width/2, 1200);
+	
+    // Tarih
+    ctx.font = 'italic 36px Poppins';
+    ctx.fillText('Tarih: ' + data.tarih, canvas.width/2, 1300);
+    } else {
+	
+		// İletişim Kişisi text
+    ctx.font = 'normal 36px Poppins';
+    ctx.fillText('İletişim: ', canvas.width/2, 900);
+
+    // İletişim Kişisi
+    ctx.font = 'bold 48px Poppins';
+    ctx.fillText(data.iletisimKisi, canvas.width/2, 950);
+	
+	// İletişim Telefon text
+    ctx.font = 'normal 36px Poppins';
+    ctx.fillText('Telefon: ', canvas.width/2, 1050);
+	
+	// İletişim Telefon
+    ctx.font = 'bold 48px Poppins';
+    ctx.fillText(data.iletisimNumarasi, canvas.width/2, 1100);
+	
+    // Tarih
+    ctx.font = 'italic 36px Poppins';
+    ctx.fillText('Tarih: ' + data.tarih, canvas.width/2, 1200);
+	}
+
+    // Logo (alt ortada)
+    const logoMaxWidth = 500;
+	const logoMaxHeight = 400;
+    let logoWidth = logo.width;
+    let logoHeight = logo.height;
+
+    // Oran hesapla
+    if(logoWidth > logoMaxWidth){
+      const ratio = logoMaxWidth / logoWidth;
+      logoWidth = logoMaxWidth;
+      logoHeight = logoHeight * ratio;
+    }
+    if(logoHeight > logoMaxHeight){
+      const ratio = logoMaxHeight / logoHeight;
+      logoHeight = logoMaxHeight;
+      logoWidth = logoWidth * ratio;
+    }
+
+    const logoX = (canvas.width - logoWidth) / 2;
+    const logoY = canvas.height - logoHeight - 250;
+
+    ctx.drawImage(logo, logoX, logoY, logoWidth, logoHeight);
+  }
+
+  form.addEventListener('submit', e => {
+    e.preventDefault();
+
+    // Verileri oku
+    let hastaAdi = document.getElementById('hastaAdi').value.trim();
+    let hastane = document.getElementById('hastane').value;
+    if(hastane === 'Diğer'){
+      hastane = document.getElementById('otherHospital').value.trim();
+    }
+    let bolum = document.getElementById('bolum').value.trim();
+    let kanGrubu = document.getElementById('kanGrubu').value;
+    let kanTuru = document.getElementById('kanTuru').value;
+    let iletisimKisi = document.getElementById('iletisimKisi').value.trim();
+    let iletisimNumarasi = document.getElementById('iletisimNumarasi').value.trim();
+    let tarih = document.getElementById('tarih').value;
+
+    if(!hastaAdi || !hastane || !kanGrubu || !kanTuru || !iletisimKisi || !iletisimNumarasi || !tarih){
+      alert('Lütfen zorunlu alanları doldurunuz!');
+      return;
+    }
+
+    // Verileri obje olarak hazırla
+    const data = {
+      hastaAdi, hastane, bolum, kanGrubu, kanTuru, iletisimKisi, iletisimNumarasi, tarih
+    };
+
+    // Canvası göster ve görseli çiz
+    canvasContainer.style.display = 'block';
+    drawVisual(data);
+
+    // Scroll yap (özellikle telefonda görünür olsun)
+    canvasContainer.scrollIntoView({behavior: 'smooth'});
+  });
+
+	indirBtn.addEventListener('click', () => {
+	  canvas.toBlob((blob) => {
+		const blobUrl = URL.createObjectURL(blob);
+
+		// iPhone Safari tespiti
+		const isIOS = /iP(hone|od|ad)/.test(navigator.userAgent);
+
+		if (isIOS) {
+		  // iOS cihazlarda yeni sekmede aç
+		  window.open(blobUrl, '_blank');
+		} else {
+		  // Diğer cihazlarda otomatik indir
+		  const link = document.createElement('a');
+		  link.href = blobUrl;
+		  link.download = 'kan_bagisi_cagrisi.png';
+		  document.body.appendChild(link);
+		  link.click();
+		  document.body.removeChild(link);
+		}
+
+		// Belleği temizle
+		URL.revokeObjectURL(blobUrl);
+	  }, 'image/png');
+	});
+	
+	canvas.addEventListener('click', () => {
+  const dataUrl = canvas.toDataURL('image/png');
+  window.open(dataUrl, '_blank');
+});
+
+
+  // Logo yüklendiğinde canvas çizim hazır olur
+  logo.onload = () => {
+    // boş bırakabiliriz, ilk çizim form gönderince olacak
+  };
+</script>
+</body>
+</html>
+
+
   // Logo yüklendiğinde canvas çizim hazır olur
   logo.onload = () => {
     // boş bırakabiliriz, ilk çizim form gönderince olacak
